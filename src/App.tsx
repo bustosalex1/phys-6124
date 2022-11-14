@@ -1,5 +1,5 @@
 import React from 'react'
-import './App.css'
+import { Projection } from './components/Projection'
 
 const App = () => {
     return (
@@ -8,7 +8,7 @@ const App = () => {
                 PHYS 6124 Final Project
             </div>
             <div className="p-20 bg-white rounded-md border-1 border-black drop-shadow-xl">
-                Projection goes here...
+                <Projection projectionType="Airy Minimum" />
             </div>
         </div>
     )
