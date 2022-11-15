@@ -1,9 +1,8 @@
 import React from 'react'
 import { geoGraticule, geoPath } from 'd3'
-import { projectionOptions } from './ProjectionOptions'
 
 type ProjectionProps = {
-    projectionType: string
+    projectionType: any
 }
 
 const width = 600
@@ -14,12 +13,12 @@ export const Projection = ({ projectionType }: ProjectionProps) => {
     const graticules = geoGraticule()
 
     // create a projection generator based on the input projection
-    // WHY does this work
-    const projection = projectionOptions[projectionType]().fitSize(
-        [width, height],
-        { type: 'Sphere' }
-    )
+    // WHY does this work with the sphere input
+    const projection = projectionType
+        .projection()
+        .fitSize([width, height], { type: 'Sphere' })
 
+    // this is the geographic path generator or SOMETHING
     const path = geoPath(projection)
 
     return (
