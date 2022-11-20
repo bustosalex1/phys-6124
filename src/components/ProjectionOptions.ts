@@ -2,19 +2,14 @@ import * as d3 from 'd3'
 import * as d3GeoProjection from 'd3-geo-projection'
 
 export const projectionOptions = [
-    { name: 'Airy Minimum Error', projection: d3GeoProjection.geoAiry },
-    { name: 'Mercator', projection: d3.geoMercator },
-    { name: 'Albers', projection: d3.geoAlbers },
-    { name: 'Equirectangular', projection: d3.geoEquirectangular },
-    { name: 'Azimuthal Equidistant', projection: d3.geoAzimuthalEquidistant },
-    { name: 'Eckert I', projection: d3GeoProjection.geoEckert1 },
-    { name: 'American Polyconic', projection: d3GeoProjection.geoPolyconic },
-    {
-        name: 'Cylindrical Stereographic',
-        projection: d3GeoProjection.geoCylindricalStereographic,
-    },
-    {
-        name: 'Hill Eucyclic',
-        projection: d3GeoProjection.geoHill
-    }
+    { name: 'Equirectangular', projection: d3.geoEquirectangularRaw },
+    { name: 'Azimuthal Equidistant', projection: d3.geoAzimuthalEquidistantRaw },
+    { name: 'Azimuthal Equal Area', projection: d3.geoAzimuthalEqualAreaRaw },
+    { name: 'Eckert I', projection: d3GeoProjection.geoEckert1Raw },
+    { name: 'American Polyconic', projection: d3GeoProjection.geoPolyconicRaw },
+    { name: 'Orthographic', projection: d3.geoOrthographicRaw },
+    { name: 'Conic Equidistant', projection: d3.geoConicEquidistantRaw(5, 5) },
+    { name: 'Larrivee', projection: d3GeoProjection.geoLarriveeRaw },
+    { name: 'Aitoff', projection: d3GeoProjection.geoAitoffRaw },
+    { name: 'Eisenlohr', projection: d3GeoProjection.geoEisenlohrRaw },
 ]
