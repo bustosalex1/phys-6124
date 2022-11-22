@@ -1,11 +1,15 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
+import * as d3GeoProjection from 'd3-geo-projection'
 import {
     easeCubic,
     geoAzimuthalEqualAreaRaw,
     geoEquirectangular,
     geoGraticule,
+    geoMercatorRaw,
+    geoOrthographicRaw,
     geoPath,
+    geoStereographicRaw,
     select,
 } from 'd3'
 import { interpolateProjection, projectionTween } from '../infrastructure/utils'
@@ -57,7 +61,7 @@ export const ProjectionCanvas = ({
 
     const projection = interpolateProjection(
         currentProjection.projection as any,
-        geoAzimuthalEqualAreaRaw as any,
+        geoOrthographicRaw as any,
         width * 3,
         height * 3
     )
@@ -66,24 +70,27 @@ export const ProjectionCanvas = ({
 
     const graticules = geoGraticule()
     const draw = (ctx: CanvasRenderingContext2D, frameCount: number) => {
-        frameCount = frameCount % 150
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         let currProj = projection as any
         currProj
-            .alpha(frameCount / 150)
+            .alpha(frameCount / 200)
             .fitSize([width * 3, height * 3], { type: 'Sphere' })
-            .rotate([30, 30, frameCount])
+            .rotate([frameCount, 0, 30])
         const path = geoPath(projection, ctx)
-        ctx!.canvas.style.width = width + 'px'
-        ctx!.canvas.style.height = height + 'px'
-        ctx!.canvas.width = width * 3
-        ctx!.canvas.height = height * 3
-        ctx!.clearRect(0, 0, width, height)
-        ctx!.beginPath()
+        ctx.canvas.style.width = width + 'px'
+        ctx.canvas.style.height = height + 'px'
+        ctx.canvas.width = width * 3
+        ctx.canvas.height = height * 3
+        ctx.clearRect(0, 0, width, height)
+        ctx.beginPath()
         path(graticules())
-        ctx!.lineWidth = 1
-        ctx!.strokeStyle = '#AAA'
-        ctx!.stroke()
+        ctx.lineWidth = 1
+        ctx.strokeStyle = '#AAA'
+        ctx.stroke()
+        ctx.beginPath()
+        path(worldAtlas.land)
+        ctx.fillStyle = 'orange'
+        ctx.fill()
     }
 
     // useEffect(() => {
@@ -123,19 +130,20 @@ export const ProjectionCanvas = ({
         if (canvasRef.current) {
             canvasCtxRef.current = canvasRef.current.getContext('2d')
 
-            let frameCount = 0
-            let animationFrameId: number
+            // let frameCount = 0
+            // let animationFrameId: number
+            draw(canvasCtxRef.current!, 0)
 
-            const render = () => {
-                frameCount++
-                draw(canvasCtxRef.current!, frameCount)
-                animationFrameId = window.requestAnimationFrame(render)
-            }
-            render()
+            // const render = () => {
+            //     frameCount++
+            //     draw(canvasCtxRef.current!, frameCount)
+            //     animationFrameId = window.requestAnimationFrame(render)
+            // }
+            // render()
 
-            return () => {
-                window.cancelAnimationFrame(animationFrameId)
-            }
+            // return () => {
+            //     window.cancelAnimationFrame(animationFrameId)
+            // }
             // let ctx = canvasCtxRef.current
 
             // const path = geoPath(testProjection, ctx)
@@ -152,5 +160,31 @@ export const ProjectionCanvas = ({
         }
     }, [])
 
-    return <canvas ref={canvasRef}></canvas>
+    const animateTransition = () => {
+        let frameCount = 0
+        let animationFrameId = 0
+
+        const render = () => {
+            console.log(frameCount)
+            if (frameCount >= 200) {
+                return
+            }
+            frameCount++
+            draw(canvasCtxRef.current!, frameCount)
+            animationFrameId = window.requestAnimationFrame(render)
+        }
+        render()
+
+        return () => {
+            window.cancelAnimationFrame(animationFrameId)
+        }
+    }
+    return (
+        <div>
+            <button className="btn" onClick={animateTransition}>
+                Test Anim
+            </button>
+            <canvas ref={canvasRef}></canvas>
+        </div>
+    )
 }
