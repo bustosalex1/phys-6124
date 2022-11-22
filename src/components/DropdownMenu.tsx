@@ -11,7 +11,7 @@ const DropdownMenu = ({ options, label, setSelectedValue, selectedValue }: Dropd
     return (
         <div className="form-control w-full max-w-xs">
             <label className="label">
-                <span className="label-text">{label}</span>
+                <span className="label-text text-black">{label}</span>
             </label>
             <select
                 className="select select-bordered w-full max-w-xs"

@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 
-import { easeCubic, geoGraticule, geoPath, GeoProjection, select } from 'd3'
+import { easeBounceInOut, easeCubic, geoGraticule, geoPath, GeoProjection, select } from 'd3'
 import { interpolateProjection, projectionTween } from '../infrastructure/utils'
 type ProjectionProps = {
     currentProjection: any
     setCurrentProjection: any
     nextProjection: any | null
-    worldAtlas: any
+    worldAtlas?: any
 }
 
 const width = 600
@@ -38,6 +38,10 @@ export const Projection = ({
                         height
                     ) as any
                 )
+
+        const info =
+            projectionRef.current && select(projectionRef.current).selectAll('path').attr('d')
+        console.log(info)
     }, [currentProjection, nextProjection])
 
     const projection = interpolateProjection(
@@ -45,7 +49,9 @@ export const Projection = ({
         currentProjection.projection as any,
         width,
         height
-    ).alpha(0) as GeoProjection
+    )
+        .alpha(0)
+        .rotate([30, 30, 30])
 
     useEffect(() => {
         // create graticules
@@ -54,13 +60,21 @@ export const Projection = ({
         // this is the geographic path generator or SOMETHING
         const path = geoPath(projection)
         // bind sphere and graticule data to projection references in a very D3 way
-        console.log('executed')
-        projectionRef.current &&
-            select(projectionRef.current)
-                .selectAll('path')
-                .data([{ type: 'Sphere' }, graticules()].concat(worldAtlas.land.features))
-                .attr('d', path as any)
-    }, [])
+
+        if (worldAtlas) {
+            projectionRef.current &&
+                select(projectionRef.current)
+                    .selectAll('path')
+                    .data([{ type: 'Sphere' }, graticules()].concat(worldAtlas.land.features))
+                    .attr('d', path as any)
+        } else {
+            projectionRef.current &&
+                select(projectionRef.current)
+                    .selectAll('path')
+                    .data([{ type: 'Sphere' }, graticules()])
+                    .attr('d', path as any)
+        }
+    }, [worldAtlas])
 
     useEffect(() => {
         if (nextProjection) {
@@ -75,9 +89,10 @@ export const Projection = ({
             <g ref={projectionRef}>
                 <path className="fill-none stroke-slate-400" />
                 <path className="fill-none stroke-slate-400" />
-                {worldAtlas.land.features.map((feature: any) => (
-                    <path className="fill-emerald-800 opacity-50" />
-                ))}
+                {worldAtlas &&
+                    worldAtlas.land.features.map((feature: any) => (
+                        <path className="fill-emerald-800 opacity-50" />
+                    ))}
             </g>
         </svg>
     )

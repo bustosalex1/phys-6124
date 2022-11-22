@@ -40,7 +40,7 @@ export const projectionTween = (
     return (d: any) => {
         return (t: number) => {
             if (width && height) {
-                projection.alpha(t).fitSize([width, height], { type: 'Sphere' })
+                projection.alpha(t).fitSize([width, height], { type: 'Sphere' }).rotate([30, 30, 30])
             } else {
                 projection.alpha(t)
             }

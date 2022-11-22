@@ -4,11 +4,10 @@ import { Projection } from './components/Projection'
 import { projectionOptions } from './components/ProjectionOptions'
 import DropdownMenu from './components/DropdownMenu'
 import { useWorldAtlas } from './infrastructure/useWorldAtlas'
+import { ProjectionCanvas } from './components/ProjectionCanvas'
 
 const App = () => {
-    /** Roadmap */
-    // 3. map of mars
-    // 4. dragging
+    const [atlasEnabled, setAtlasEnabled] = useState<boolean>(true)
     const worldAtlas = useWorldAtlas()
 
     const [currentProjection, setCurrentProjection] = useState(projectionOptions[0])
@@ -26,7 +25,7 @@ const App = () => {
             <div className="flex items-center justify-center flex-row space-x-10">
                 <div className="p-5 bg-white rounded-md border-1 border-black drop-shadow-xl">
                     <div className="flex items-start justify-start flex-col space-y-5">
-                        <div className="text-center text-lg font-semibold">
+                        <div className="text-center text-lg font-semibold text-black">
                             Projection Parameters
                         </div>
                         <DropdownMenu
@@ -35,14 +34,27 @@ const App = () => {
                             selectedValue={currentProjection}
                             setSelectedValue={setNextProjection}
                         />
+                        <div className="form-control">
+                            <label className="label cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="toggle toggle-primary"
+                                    checked={atlasEnabled}
+                                    onChange={(_) => {
+                                        setAtlasEnabled(!atlasEnabled)
+                                    }}
+                                />
+                                <span className="label-text text-black p-1">Atlas</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div className="p-20 bg-white rounded-md border-1 border-black drop-shadow-xl">
-                    <Projection
+                    <ProjectionCanvas
                         currentProjection={currentProjection}
                         setCurrentProjection={setCurrentProjection}
                         nextProjection={nextProjection}
-                        worldAtlas={worldAtlas}
+                        worldAtlas={atlasEnabled ? worldAtlas : undefined}
                     />
                 </div>
             </div>
