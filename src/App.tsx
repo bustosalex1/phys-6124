@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState } from 'react'
-import { Projection } from './components/Projection'
 import { projectionOptions } from './components/ProjectionOptions'
 import DropdownMenu from './components/DropdownMenu'
 import { useWorldAtlas } from './infrastructure/useWorldAtlas'
@@ -54,6 +53,7 @@ const App = () => {
                         currentProjection={currentProjection}
                         setCurrentProjection={setCurrentProjection}
                         nextProjection={nextProjection}
+                        setNextProjection={setNextProjection}
                         worldAtlas={atlasEnabled ? worldAtlas : undefined}
                     />
                 </div>

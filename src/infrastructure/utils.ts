@@ -17,8 +17,8 @@ export const interpolateProjection = (
 
     const mutatedProjection = Object.assign(mutate(t), {
         alpha(_: number) {
-            // return arguments.length ? mutate((t = +_)) : t
-            return mutate((t = +_))
+            return arguments.length ? mutate((t = +_)) : t
+            // return mutate((t = +_))
         },
     })
 
@@ -40,7 +40,7 @@ export const projectionTween = (
     return (d: any) => {
         return (t: number) => {
             if (width && height) {
-                projection.alpha(t).fitSize([width, height], { type: 'Sphere' }).rotate([30, 30, 30])
+                // projection.alpha(t).fitSize([width, height], { type: 'Sphere' })
             } else {
                 projection.alpha(t)
             }

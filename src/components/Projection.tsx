@@ -49,16 +49,14 @@ export const Projection = ({
         currentProjection.projection as any,
         width,
         height
-    )
-        .alpha(0)
-        .rotate([30, 30, 30])
+    ).alpha(0)
 
     useEffect(() => {
         // create graticules
         const graticules = geoGraticule()
 
         // this is the geographic path generator or SOMETHING
-        const path = geoPath(projection)
+        const path = geoPath(projection as any)
         // bind sphere and graticule data to projection references in a very D3 way
 
         if (worldAtlas) {

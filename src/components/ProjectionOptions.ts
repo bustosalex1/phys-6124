@@ -12,4 +12,6 @@ export const projectionOptions = [
     { name: 'Larrivee', projection: d3GeoProjection.geoLarriveeRaw },
     { name: 'Aitoff', projection: d3GeoProjection.geoAitoffRaw },
     { name: 'Eisenlohr', projection: d3GeoProjection.geoEisenlohrRaw },
+    { name: 'Stereographic', projection: d3.geoStereographicRaw },
+    { name: 'Mercator', projection: d3.geoMercatorRaw },
 ]
