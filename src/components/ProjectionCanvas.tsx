@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 
-import { easeCubic, geoGraticule, geoPath, geoProjection, GeoProjection } from 'd3'
+import { easeCubic, geoGraticule, geoPath, geoProjection, GeoProjection, select } from 'd3'
 
-import { interpolateProjection } from '../infrastructure/utils'
+import { interpolateProjection, dragGenerator } from '../infrastructure/utils'
 type ProjectionProps = {
     currentProjection: any
     setCurrentProjection: any
@@ -95,7 +95,6 @@ export const ProjectionCanvas = ({
                 .scale(300)
                 .precision(0.1)
                 .translate([(width * 3) / 2, (height * 3) / 2])
-            console.log('called')
             const path = geoPath(initialProjection, ctx)
             ctx.clearRect(0, 0, width, height)
             ctx.beginPath()
@@ -113,6 +112,28 @@ export const ProjectionCanvas = ({
                 ctx.fillStyle = 'rgb(6, 95, 70)'
                 ctx.fill()
             }
+            const renderLand = () => {
+                ctx.clearRect(0, 0, width * 3, height * 3)
+                ctx.beginPath()
+                path(graticules())
+                ctx.lineWidth = 2
+                ctx.strokeStyle = '#AAA'
+                ctx.stroke()
+                ctx.beginPath()
+                path({ type: 'Sphere' })
+                ctx.stroke()
+
+                if (worldAtlas) {
+                    ctx.beginPath()
+                    path(worldAtlas.land)
+                    ctx.fillStyle = 'rgb(6, 95, 70)'
+                    ctx.fill()
+                }
+            }
+
+            select(canvasRef.current).call(
+                dragGenerator(initialProjection).on('drag.render', renderLand) as any
+            )
         }
     }, [currentProjection, worldAtlas])
 

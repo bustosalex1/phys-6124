@@ -9,7 +9,7 @@ const App = () => {
     const [atlasEnabled, setAtlasEnabled] = useState<boolean>(true)
     const worldAtlas = useWorldAtlas()
 
-    const [currentProjection, setCurrentProjection] = useState(projectionOptions[0])
+    const [currentProjection, setCurrentProjection] = useState(projectionOptions[5])
     const [nextProjection, setNextProjection] = useState(null)
 
     if (!worldAtlas) {

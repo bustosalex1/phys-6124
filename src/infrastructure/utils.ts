@@ -1,4 +1,6 @@
 import { geoPath, GeoRawProjection, geoProjectionMutator, GeoPath, GeoProjection } from 'd3-geo'
+import { drag } from 'd3'
+import versor from 'versor'
 
 export const interpolateProjection = (
     raw0: GeoRawProjection,
@@ -56,4 +58,22 @@ export const existingProjectionTween = (projection: any, path: GeoPath) => {
             return path(d) as string
         }
     }
+}
+
+export const dragGenerator = (projection: any) => {
+    let v0: any, q0: any, r0: any
+
+    const dragStarted = (event: any) => {
+        v0 = versor.cartesian(projection.invert([event.x, event.y]))
+        q0 = versor((r0 = projection.rotate()))
+    }
+
+    const dragged = (event: any) => {
+        console.log(`${event.x}, ${event.y}`)
+        const v1 = versor.cartesian(projection.rotate(r0).invert([event.x, event.y]))
+        const q1 = versor.multiply(q0, versor.delta(v0, v1))
+        projection.rotate(versor.rotation(q1))
+    }
+
+    return drag().on('start', dragStarted).on('drag', dragged)
 }
