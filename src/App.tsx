@@ -17,9 +17,6 @@ const App = () => {
     // state variable to manage the scale of the projection
     const [scale, setScale] = useState<number>(100)
 
-    // state variable for RTX on or off
-    const [resolution, setResolution] = useState<number>(2)
-
     return (
         <>
             <div className="p-10 text-center text-4xl font-semibold drop-shadow-xl">
@@ -78,7 +75,7 @@ const App = () => {
                         height={450}
                         scale={scale}
                         label={currentProjection.name}
-                        resolution={resolution}
+                        resolution={2}
                     />
                 </div>
             </div>
