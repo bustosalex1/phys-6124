@@ -1,15 +1,13 @@
 {
   "files": {
-    "main.css": "/pages/abustos6/phys-6124-final-project/static/css/main.b4a5ab32.css",
-    "main.js": "/pages/abustos6/phys-6124-final-project/static/js/main.7a2b4cb0.js",
-    "static/js/787.5ae7f2cf.chunk.js": "/pages/abustos6/phys-6124-final-project/static/js/787.5ae7f2cf.chunk.js",
+    "main.css": "/pages/abustos6/phys-6124-final-project/static/css/main.737c7c0e.css",
+    "main.js": "/pages/abustos6/phys-6124-final-project/static/js/main.38cf8ebd.js",
     "index.html": "/pages/abustos6/phys-6124-final-project/index.html",
-    "main.b4a5ab32.css.map": "/pages/abustos6/phys-6124-final-project/static/css/main.b4a5ab32.css.map",
-    "main.7a2b4cb0.js.map": "/pages/abustos6/phys-6124-final-project/static/js/main.7a2b4cb0.js.map",
-    "787.5ae7f2cf.chunk.js.map": "/pages/abustos6/phys-6124-final-project/static/js/787.5ae7f2cf.chunk.js.map"
+    "main.737c7c0e.css.map": "/pages/abustos6/phys-6124-final-project/static/css/main.737c7c0e.css.map",
+    "main.38cf8ebd.js.map": "/pages/abustos6/phys-6124-final-project/static/js/main.38cf8ebd.js.map"
   },
   "entrypoints": [
-    "static/css/main.b4a5ab32.css",
-    "static/js/main.7a2b4cb0.js"
+    "static/css/main.737c7c0e.css",
+    "static/js/main.38cf8ebd.js"
   ]
 }
