@@ -1,65 +1,122 @@
-import React, { useCallback, useEffect, useRef } from 'react'
-
-import { easeCubic, geoGraticule, geoPath, geoProjection, GeoProjection, select } from 'd3'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import {
+    easeCubic,
+    geoGraticule,
+    geoOrthographic,
+    geoPath,
+    geoProjection,
+    GeoProjection,
+    select,
+} from 'd3'
 
 import { interpolateProjection, dragGenerator } from '../infrastructure/utils'
+import land110m from 'world-atlas/land-110m.json'
+import { feature } from 'topojson'
+
 type ProjectionProps = {
     currentProjection: any
     setCurrentProjection: any
     setNextProjection: any
     nextProjection: any | null
-    worldAtlas?: any
+    useAtlas?: boolean
+    width: number
+    height: number
+    label: string
+    scale?: number
+    duration?: number
 }
 
-const width = 900
-const height = 450
+// all of this is bad
+// make a slider for animationDuration please!
 const animationDuration = 280
+
+// can we move this elsewhere?
 const graticules = geoGraticule()
+const land = feature(land110m as any, land110m.objects.land as any)
 
 export const ProjectionCanvas = ({
     currentProjection,
     nextProjection,
     setCurrentProjection,
     setNextProjection,
-    worldAtlas,
+    useAtlas,
+    width,
+    height,
+    label,
+    scale = 100,
+    duration,
 }: ProjectionProps) => {
-    // create refs for the canvas and canvas context so we can access them inside functions
+    // refs for the canvas and canvas context so we can access them elsewhere in a cool typed way
     const canvasRef = useRef<HTMLCanvasElement | null>(null)
     const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null)
 
-    // function for drawing frames
+    // I can't believe I'm doing this
+    const orthoCanvasRef = useRef<HTMLCanvasElement | null>(null)
+    const orthoCanvasCtxRef = useRef<CanvasRenderingContext2D | null>(null)
+
+    // state variable for the current projection, basically just to account for smooth animations
+    const [currentRotation, setCurrentRotation] = useState<[number, number, number]>([0, 0, 0])
+
+    // function to draw frames; uses useCallback so other things know that this doesn't change.
     const draw = useCallback(
         (ctx: CanvasRenderingContext2D, frameCount: number, projection: GeoProjection) => {
             // interpolate time with easing
             const t = easeCubic(frameCount / animationDuration)
 
-            // clear the canvas
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-            let currProj = projection as any
-            currProj.alpha(t)
-            const path = geoPath(projection, ctx)
+            // clear the canvas on each frame
             ctx.clearRect(0, 0, width, height)
-            ctx.beginPath()
-            path(graticules())
-            ctx.lineWidth = 2
+
+            // only update the projection if we're animating, basically
+            if ((projection as any).alpha) {
+                ;(projection as any).alpha(t) // this is pretty gross but oh well
+            }
+
+            // instantiate a path generator based on the current projection
+            const path = geoPath(projection, ctx)
+
+            // we're going to be using the same stroke for this, so go ahead and set it
             ctx.strokeStyle = '#AAA'
-            ctx.stroke()
+            ctx.lineWidth = 1
+
+            // fill style will change but we'll go ahead and set it to white initially
+            ctx.fillStyle = 'white'
+
+            // first draw the sphere and fill it in
             ctx.beginPath()
             path({ type: 'Sphere' })
             ctx.stroke()
+            ctx.fill()
 
-            if (worldAtlas) {
+            // then draw the graticules
+            ctx.beginPath()
+            path(graticules())
+            ctx.stroke()
+
+            // finally draw the atlas, if it is enabled
+            if (useAtlas) {
                 ctx.beginPath()
-                path(worldAtlas.land)
+                path(land)
                 ctx.fillStyle = 'rgb(6, 95, 70)'
                 ctx.fill()
             }
         },
-        [worldAtlas]
+        [useAtlas, height, width]
     )
 
-    const animateTransition = useCallback(
-        (projection: GeoProjection) => {
+    // callback function to animate the transition between projections
+    const animateTransition = useCallback(() => {
+        if (nextProjection && currentProjection) {
+            const interpolatedProjection = interpolateProjection(
+                currentProjection.projection,
+                nextProjection.projection,
+                width,
+                height
+            )
+                .precision(0.1)
+                .scale(scale as any)
+                .translate([width / 2, height / 2])
+                .rotate(currentRotation)
+
             let frameCount = 0
             let animationFrameId = 0
 
@@ -68,7 +125,7 @@ export const ProjectionCanvas = ({
                     return
                 }
 
-                draw(canvasCtxRef.current!, frameCount, projection)
+                draw(canvasCtxRef.current!, frameCount, interpolatedProjection)
                 frameCount++
                 animationFrameId = window.requestAnimationFrame(render)
             }
@@ -78,93 +135,96 @@ export const ProjectionCanvas = ({
             return () => {
                 window.cancelAnimationFrame(animationFrameId)
             }
-        },
-        [draw]
-    )
+        }
+    }, [draw, currentProjection, currentRotation, width, height, nextProjection, scale])
 
     useEffect(() => {
         // instantiate canvas context once on page load
-        // only proceed if the context is non-null
-        if (canvasRef.current && (canvasCtxRef.current = canvasRef.current.getContext('2d'))) {
+        if (
+            canvasRef.current &&
+            (canvasCtxRef.current = canvasRef.current.getContext('2d')) &&
+            orthoCanvasRef.current &&
+            (orthoCanvasCtxRef.current = orthoCanvasRef.current.getContext('2d'))
+        ) {
+            // typing out canvasCtxRef.current gets tiring, so assign it to a variable
             let ctx = canvasCtxRef.current
-            ctx.canvas.style.width = width + 'px'
-            ctx.canvas.style.height = height + 'px'
-            ctx.canvas.width = width * 3
-            ctx.canvas.height = height * 3
+            let orthoCtx = orthoCanvasCtxRef.current
+
+            // set the width and height of the canvas
+            ctx.canvas.width = width
+            ctx.canvas.height = height
+
+            orthoCtx.canvas.width = width
+            orthoCtx.canvas.height = height
+
+            // set the currently active projection
             const initialProjection = geoProjection(currentProjection.projection)
-                .scale(300)
+                .scale(scale)
                 .precision(0.1)
-                .translate([(width * 3) / 2, (height * 3) / 2])
-            const path = geoPath(initialProjection, ctx)
-            ctx.clearRect(0, 0, width, height)
-            ctx.beginPath()
-            path(graticules())
-            ctx.lineWidth = 2
-            ctx.strokeStyle = '#AAA'
-            ctx.stroke()
-            ctx.beginPath()
-            path({ type: 'Sphere' })
-            ctx.stroke()
+                .translate([width / 2, height / 2])
+                .rotate(currentRotation)
 
-            if (worldAtlas) {
-                ctx.beginPath()
-                path(worldAtlas.land)
-                ctx.fillStyle = 'rgb(6, 95, 70)'
-                ctx.fill()
-            }
-            const renderLand = () => {
-                ctx.clearRect(0, 0, width * 3, height * 3)
-                ctx.beginPath()
-                path(graticules())
-                ctx.lineWidth = 2
-                ctx.strokeStyle = '#AAA'
-                ctx.stroke()
-                ctx.beginPath()
-                path({ type: 'Sphere' })
-                ctx.stroke()
+            const orthoProjection = geoOrthographic()
+                .scale(scale)
+                .precision(0.1)
+                .translate([width / 2, height / 2])
+                .rotate(currentRotation)
 
-                if (worldAtlas) {
-                    ctx.beginPath()
-                    path(worldAtlas.land)
-                    ctx.fillStyle = 'rgb(6, 95, 70)'
-                    ctx.fill()
-                }
-            }
-
+            // apply the drag functionality to the canvas
             select(canvasRef.current).call(
-                dragGenerator(initialProjection).on('drag.render', renderLand) as any
+                dragGenerator(initialProjection, orthoProjection)
+                    .on('drag.render', () => {
+                        draw(orthoCtx, 0, orthoProjection)
+                        draw(ctx, 0, initialProjection)
+                    })
+                    .on('end.render', () => {
+                        setCurrentRotation(initialProjection.rotate())
+                    }) as any
             )
+
+            select(orthoCanvasRef.current).call(
+                dragGenerator(orthoProjection, initialProjection)
+                    .on('drag.render', () => {
+                        draw(orthoCtx, 0, orthoProjection)
+                        draw(ctx, 0, initialProjection)
+                    })
+                    .on('end.render', () => {
+                        setCurrentRotation(initialProjection.rotate())
+                    }) as any
+            )
+
+            // draw the initial frame
+            draw(ctx, 0, initialProjection)
+            draw(orthoCtx, 0, orthoProjection)
+
+            // set the active projection
+            setCurrentRotation(initialProjection.rotate())
         }
-    }, [currentProjection, worldAtlas])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentProjection, useAtlas, scale])
 
     useEffect(() => {
-        // This side effect is called whenever nextProjection changes, it's what calls the animation between projections.
-        if (nextProjection && currentProjection) {
-            const interpolatedProjection = interpolateProjection(
-                currentProjection.projection,
-                nextProjection.projection,
-                width,
-                height
-            )
-                .precision(0.1)
-                .scale(300)
-                .translate([(width * 3) / 2, (height * 3) / 2])
-
-            animateTransition(interpolatedProjection)
-            setNextProjection(null)
+        if (nextProjection) {
+            animateTransition()
             setCurrentProjection({ ...nextProjection })
         }
-    }, [
-        nextProjection,
-        currentProjection,
-        animateTransition,
-        setCurrentProjection,
-        setNextProjection,
-    ])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nextProjection])
 
     return (
-        <div className="border-1 border-black rounded-lg drop-shadow-lg bg-white">
-            <canvas ref={canvasRef} />
+        <div className="flex flex-row space-x-2">
+            <div className="flex flex-col space-y-1 items-center">
+                <div className="bg-white rounded-md border-1 border-black drop-shadow-xl">
+                    <canvas ref={canvasRef} className="rounded-lg" />
+                </div>
+                <h4>{label}</h4>
+            </div>
+            <div className="flex flex-col space-y-1 items-center">
+                <div className="bg-white rounded-md border-1 border-black drop-shadow-xl">
+                    <canvas ref={orthoCanvasRef} className="rounded-lg" />
+                </div>
+                <h4>Orthographic</h4>
+            </div>
         </div>
     )
 }

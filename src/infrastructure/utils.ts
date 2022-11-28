@@ -1,4 +1,4 @@
-import { geoPath, GeoRawProjection, geoProjectionMutator, GeoPath, GeoProjection } from 'd3-geo'
+import { GeoRawProjection, geoProjectionMutator, GeoProjection } from 'd3-geo'
 import { drag } from 'd3'
 import versor from 'versor'
 
@@ -20,7 +20,6 @@ export const interpolateProjection = (
     const mutatedProjection = Object.assign(mutate(t), {
         alpha(_: number) {
             return arguments.length ? mutate((t = +_)) : t
-            // return mutate((t = +_))
         },
     })
 
@@ -31,36 +30,7 @@ export const interpolateProjection = (
     }
 }
 
-export const projectionTween = (
-    raw0: GeoRawProjection,
-    raw1: GeoRawProjection,
-    width?: number,
-    height?: number
-) => {
-    const projection = interpolateProjection(raw0, raw1, width, height)
-    const path = geoPath(projection)
-    return (d: any) => {
-        return (t: number) => {
-            if (width && height) {
-                // projection.alpha(t).fitSize([width, height], { type: 'Sphere' })
-            } else {
-                projection.alpha(t)
-            }
-            return path(d)
-        }
-    }
-}
-
-export const existingProjectionTween = (projection: any, path: GeoPath) => {
-    return (d: any) => {
-        return (t: number) => {
-            projection.alpha(t)
-            return path(d) as string
-        }
-    }
-}
-
-export const dragGenerator = (projection: any) => {
+export const dragGenerator = (projection: any, projection2: any) => {
     let v0: any, q0: any, r0: any
 
     const dragStarted = (event: any) => {
@@ -69,10 +39,10 @@ export const dragGenerator = (projection: any) => {
     }
 
     const dragged = (event: any) => {
-        console.log(`${event.x}, ${event.y}`)
         const v1 = versor.cartesian(projection.rotate(r0).invert([event.x, event.y]))
         const q1 = versor.multiply(q0, versor.delta(v0, v1))
         projection.rotate(versor.rotation(q1))
+        projection2.rotate(versor.rotation(q1))
     }
 
     return drag().on('start', dragStarted).on('drag', dragged)
