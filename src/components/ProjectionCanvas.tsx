@@ -151,12 +151,20 @@ export const ProjectionCanvas = ({
             let orthoCtx = orthoCanvasCtxRef.current
 
             // set the width and height of the canvas
-            ctx.canvas.width = width
-            ctx.canvas.height = height
+            ctx.canvas.width = width * 2
+            ctx.canvas.height = height * 2
 
-            orthoCtx.canvas.width = width
-            orthoCtx.canvas.height = height
+            ctx.canvas.style.width = width + 'px'
+            ctx.canvas.style.height = height + 'px'
 
+            orthoCtx.canvas.width = width * 2
+            orthoCtx.canvas.height = height * 2
+
+            orthoCtx.canvas.style.width = width + 'px'
+            orthoCtx.canvas.style.height = height + 'px'
+
+            orthoCtx.scale(2, 2)
+            ctx.scale(2, 2)
             // set the currently active projection
             const initialProjection = geoProjection(currentProjection.projection)
                 .scale(scale)
@@ -212,7 +220,7 @@ export const ProjectionCanvas = ({
     }, [nextProjection])
 
     return (
-        <div className="flex flex-row space-x-2">
+        <div className="flex flex-row space-x-5">
             <div className="flex flex-col space-y-1 items-center">
                 <div className="bg-white rounded-md border-1 border-black drop-shadow-xl">
                     <canvas ref={canvasRef} className="rounded-lg" />

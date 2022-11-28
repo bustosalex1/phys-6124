@@ -64,7 +64,7 @@ const App = () => {
                         </div>
                     </div>
                 </div>
-                <div className="p-20 bg-white rounded-md border-1 border-black drop-shadow-xl">
+                <div className="p-5 bg-white rounded-md border-1 border-black drop-shadow-xl">
                     <ProjectionCanvas
                         currentProjection={currentProjection}
                         setCurrentProjection={setCurrentProjection}
