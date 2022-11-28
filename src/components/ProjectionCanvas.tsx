@@ -23,6 +23,7 @@ type ProjectionProps = {
     height: number
     label: string
     scale?: number
+    resolution: number
     duration?: number
 }
 
@@ -44,6 +45,7 @@ export const ProjectionCanvas = ({
     height,
     label,
     scale = 100,
+    resolution,
     duration,
 }: ProjectionProps) => {
     // refs for the canvas and canvas context so we can access them elsewhere in a cool typed way
@@ -79,13 +81,15 @@ export const ProjectionCanvas = ({
             ctx.lineWidth = 1
 
             // fill style will change but we'll go ahead and set it to white initially
-            ctx.fillStyle = 'white'
 
             // first draw the sphere and fill it in
-            ctx.beginPath()
-            path({ type: 'Sphere' })
-            ctx.stroke()
-            ctx.fill()
+            if (currentProjection.renderSphere) {
+                ctx.beginPath()
+                path({ type: 'Sphere' })
+                ctx.stroke()
+                ctx.fillStyle = 'white'
+                ctx.fill()
+            }
 
             // then draw the graticules
             ctx.beginPath()
@@ -100,7 +104,7 @@ export const ProjectionCanvas = ({
                 ctx.fill()
             }
         },
-        [useAtlas, height, width]
+        [useAtlas, height, width, currentProjection]
     )
 
     // callback function to animate the transition between projections
@@ -151,20 +155,21 @@ export const ProjectionCanvas = ({
             let orthoCtx = orthoCanvasCtxRef.current
 
             // set the width and height of the canvas
-            ctx.canvas.width = width * 2
-            ctx.canvas.height = height * 2
+            ctx.canvas.width = width * resolution
+            ctx.canvas.height = height * resolution
 
             ctx.canvas.style.width = width + 'px'
             ctx.canvas.style.height = height + 'px'
 
-            orthoCtx.canvas.width = width * 2
-            orthoCtx.canvas.height = height * 2
+            orthoCtx.canvas.width = width * resolution
+            orthoCtx.canvas.height = height * resolution
 
             orthoCtx.canvas.style.width = width + 'px'
             orthoCtx.canvas.style.height = height + 'px'
 
-            orthoCtx.scale(2, 2)
-            ctx.scale(2, 2)
+            orthoCtx.scale(resolution, resolution)
+            ctx.scale(resolution, resolution)
+
             // set the currently active projection
             const initialProjection = geoProjection(currentProjection.projection)
                 .scale(scale)
@@ -209,7 +214,7 @@ export const ProjectionCanvas = ({
             setCurrentRotation(initialProjection.rotate())
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentProjection, useAtlas, scale])
+    }, [currentProjection, useAtlas, scale, resolution])
 
     useEffect(() => {
         if (nextProjection) {

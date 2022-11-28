@@ -17,6 +17,9 @@ const App = () => {
     // state variable to manage the scale of the projection
     const [scale, setScale] = useState<number>(100)
 
+    // state variable for RTX on or off
+    const [resolution, setResolution] = useState<number>(2)
+
     return (
         <>
             <div className="p-10 text-center text-4xl font-semibold drop-shadow-xl">
@@ -52,7 +55,7 @@ const App = () => {
                                 <input
                                     type="range"
                                     min="10"
-                                    max="500"
+                                    max="1000"
                                     value={scale}
                                     className="range"
                                     onChange={(event) => {
@@ -75,6 +78,7 @@ const App = () => {
                         height={450}
                         scale={scale}
                         label={currentProjection.name}
+                        resolution={resolution}
                     />
                 </div>
             </div>
