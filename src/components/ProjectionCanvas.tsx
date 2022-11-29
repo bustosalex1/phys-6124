@@ -24,12 +24,11 @@ type ProjectionProps = {
     label: string
     scale?: number
     resolution: number
-    duration?: number
+    animationDuration: number
 }
 
 // all of this is bad
 // make a slider for animationDuration please!
-const animationDuration = 280
 
 // can we move this elsewhere?
 const graticules = geoGraticule()
@@ -46,7 +45,7 @@ export const ProjectionCanvas = ({
     label,
     scale = 100,
     resolution,
-    duration,
+    animationDuration,
 }: ProjectionProps) => {
     // refs for the canvas and canvas context so we can access them elsewhere in a cool typed way
     const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -104,7 +103,7 @@ export const ProjectionCanvas = ({
                 ctx.fill()
             }
         },
-        [useAtlas, height, width, currentProjection]
+        [useAtlas, height, width, currentProjection, animationDuration]
     )
 
     // callback function to animate the transition between projections
@@ -140,7 +139,16 @@ export const ProjectionCanvas = ({
                 window.cancelAnimationFrame(animationFrameId)
             }
         }
-    }, [draw, currentProjection, currentRotation, width, height, nextProjection, scale])
+    }, [
+        draw,
+        currentProjection,
+        currentRotation,
+        width,
+        height,
+        nextProjection,
+        scale,
+        animationDuration,
+    ])
 
     useEffect(() => {
         // instantiate canvas context once on page load
@@ -227,13 +235,13 @@ export const ProjectionCanvas = ({
     return (
         <div className="flex flex-row space-x-5">
             <div className="flex flex-col space-y-1 items-center">
-                <div className="bg-white rounded-md border-1 border-black drop-shadow-xl">
+                <div className="bg-white rounded-md border-1 border-gray-300">
                     <canvas ref={canvasRef} className="rounded-lg" />
                 </div>
                 <h4>{label}</h4>
             </div>
             <div className="flex flex-col space-y-1 items-center">
-                <div className="bg-white rounded-md border-1 border-black drop-shadow-xl">
+                <div className="bg-white rounded-md border-1 border-gray-300">
                     <canvas ref={orthoCanvasRef} className="rounded-lg" />
                 </div>
                 <h4>Orthographic</h4>
