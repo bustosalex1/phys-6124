@@ -24,9 +24,9 @@ const App = () => {
                 PHYS 6124 Final Project
             </div>
             {/* Outermost container for Projection Parameters div and Projection Canvas div */}
-            <div className="flex items-center justify-center flex-row space-x-10">
+            <div className="flex justify-center flex-row space-x-10">
                 {/* Projection Parameters div */}
-                <div className="p-5 rounded-md border-1 border-black drop-shadow-xl flex iterms-start justify-start flex-col space-y-2 h-full bg-white">
+                <div className="p-5 rounded-md border-1 border-black drop-shadow-xl flex iterms-start justify-start flex-col space-y-2 bg-white">
                     {/* Projection Parameters title text */}
                     <div className="text-center text-lg font-semibold">Projection Parameters</div>
                     {/* Dropdown menu for projection options */}
