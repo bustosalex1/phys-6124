@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/pages/abustos6/phys-6124-final-project/static/css/main.a1d68671.css",
-    "main.js": "/pages/abustos6/phys-6124-final-project/static/js/main.a32b3aba.js",
+    "main.css": "/pages/abustos6/phys-6124-final-project/static/css/main.5e74f1a8.css",
+    "main.js": "/pages/abustos6/phys-6124-final-project/static/js/main.22f0f09f.js",
     "index.html": "/pages/abustos6/phys-6124-final-project/index.html",
-    "main.a1d68671.css.map": "/pages/abustos6/phys-6124-final-project/static/css/main.a1d68671.css.map",
-    "main.a32b3aba.js.map": "/pages/abustos6/phys-6124-final-project/static/js/main.a32b3aba.js.map"
+    "main.5e74f1a8.css.map": "/pages/abustos6/phys-6124-final-project/static/css/main.5e74f1a8.css.map",
+    "main.22f0f09f.js.map": "/pages/abustos6/phys-6124-final-project/static/js/main.22f0f09f.js.map"
   },
   "entrypoints": [
-    "static/css/main.a1d68671.css",
-    "static/js/main.a32b3aba.js"
+    "static/css/main.5e74f1a8.css",
+    "static/js/main.22f0f09f.js"
   ]
 }
