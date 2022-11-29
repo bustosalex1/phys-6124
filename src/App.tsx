@@ -19,51 +19,56 @@ const App = () => {
 
     return (
         <>
+            {/* Title Text */}
             <div className="p-10 text-center text-4xl font-semibold drop-shadow-xl">
                 PHYS 6124 Final Project
             </div>
+            {/* Outermost container for Projection Parameters div and Projection Canvas div */}
             <div className="flex items-center justify-center flex-row space-x-10">
-                <div className="p-5 bg-white rounded-md border-1 border-black drop-shadow-xl">
-                    <div className="flex items-start justify-start flex-col space-y-2">
-                        <div className="text-center text-lg font-semibold text-black">
-                            Projection Parameters
-                        </div>
-                        <DropdownMenu
-                            options={projectionOptions}
-                            label="Projection"
-                            selectedValue={currentProjection}
-                            setSelectedValue={setNextProjection}
-                        />
-                        <div className="form-control">
-                            <label className="label cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    className="toggle "
-                                    checked={atlasEnabled}
-                                    onChange={(_) => {
-                                        setAtlasEnabled(!atlasEnabled)
-                                    }}
-                                />
-                                <span className="label-text text-black p-1">Atlas</span>
-                            </label>
-                        </div>
-                        <div className="form-control">
-                            <label className="label cursor-pointer">
-                                <input
-                                    type="range"
-                                    min="10"
-                                    max="1000"
-                                    value={scale}
-                                    className="range"
-                                    onChange={(event) => {
-                                        setScale(+event.target.value)
-                                    }}
-                                />
-                                <span className="label-text text-black p-1">Scale</span>
-                            </label>
-                        </div>
+                {/* Projection Parameters div */}
+                <div className="p-5 rounded-md border-1 border-black drop-shadow-xl flex iterms-start justify-start flex-col space-y-2 h-full bg-white">
+                    {/* Projection Parameters title text */}
+                    <div className="text-center text-lg font-semibold">Projection Parameters</div>
+                    {/* Dropdown menu for projection options */}
+                    <DropdownMenu
+                        options={projectionOptions}
+                        label="Projection"
+                        selectedValue={currentProjection}
+                        setSelectedValue={setNextProjection}
+                    />
+                    {/* Toggle for enabling/disabling world atlas shapes */}
+                    <div className="form-control">
+                        <label className="label cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="toggle "
+                                checked={atlasEnabled}
+                                onChange={(_) => {
+                                    setAtlasEnabled(!atlasEnabled)
+                                }}
+                            />
+                            <span className="label-text p-1">Atlas</span>
+                        </label>
+                    </div>
+                    {/* Slider to set zoom value */}
+                    <div className="form-control">
+                        <label className="label cursor-pointer">
+                            <input
+                                type="range"
+                                min="10"
+                                max="1000"
+                                value={scale}
+                                className="range"
+                                onChange={(event) => {
+                                    setScale(+event.target.value)
+                                }}
+                            />
+                            <span className="label-text p-1">Zoom</span>
+                        </label>
                     </div>
                 </div>
+
+                {/* div for Projection Canvas */}
                 <div className="p-5 bg-white rounded-md border-1 border-black drop-shadow-xl">
                     <ProjectionCanvas
                         currentProjection={currentProjection}
@@ -71,8 +76,8 @@ const App = () => {
                         nextProjection={nextProjection}
                         setNextProjection={setNextProjection}
                         useAtlas={atlasEnabled}
-                        width={450}
-                        height={450}
+                        width={450} // made this up, basically
+                        height={450} // also made this up
                         scale={scale}
                         label={currentProjection.name}
                         resolution={2}
