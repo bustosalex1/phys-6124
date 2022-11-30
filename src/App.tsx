@@ -50,7 +50,7 @@ const App = () => {
                         className="self-center border-1 p-2 border-gray-300 rounded-md flex flex-col space-y-1 w-full items-center"
                         style={{ visibility: currentProjection.formula ? 'visible' : 'hidden' }}
                     >
-                        <MathJax>
+                        <MathJax dynamic>
                             <span>
                                 {currentProjection.formula ? currentProjection.formula : ' '}
                             </span>
