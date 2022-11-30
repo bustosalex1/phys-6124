@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { projectionOptions } from './components/ProjectionOptions'
 import DropdownMenu from './components/DropdownMenu'
 import { ProjectionCanvas } from './components/ProjectionCanvas'
-import { MathJax, MathJaxContext } from 'better-react-mathjax'
+import { MathJax } from 'better-react-mathjax'
 
 const App = () => {
     // state variable to manage whether or not the world atlas is visible
@@ -45,15 +45,12 @@ const App = () => {
                         setSelectedValue={setNextProjection}
                     />
                     {/* Display Component for Projection Equations */}
-                    <MathJaxContext>
-                        {currentProjection.formula && (
-                            <div className="self-center border-1 p-2 border-gray-300 rounded-md flex flex-col space-y-1 w-full items-center">
-                                {/* <MathComponent tex={currentProjection.formula} /> */}
-                                <MathJax>{currentProjection.formula}</MathJax>
-                                <span className="label-text p-1">Base Projection</span>
-                            </div>
-                        )}
-                    </MathJaxContext>
+                    {currentProjection.formula && (
+                        <div className="self-center border-1 p-2 border-gray-300 rounded-md flex flex-col space-y-1 w-full items-center">
+                            <MathJax>{currentProjection.formula}</MathJax>
+                            <span className="label-text p-1">Base Projection</span>
+                        </div>
+                    )}
                     {/* Toggle for enabling/disabling world atlas shapes */}
                     <div className="form-control">
                         <label className="label cursor-pointer">
