@@ -51,7 +51,9 @@ const App = () => {
                         style={{ visibility: currentProjection.formula ? 'visible' : 'hidden' }}
                     >
                         <MathJax>
-                            {currentProjection.formula ? currentProjection.formula : ' '}
+                            <span>
+                                {currentProjection.formula ? currentProjection.formula : ' '}
+                            </span>
                         </MathJax>
                         <span className="label-text p-1">Base Projection</span>
                     </div>
