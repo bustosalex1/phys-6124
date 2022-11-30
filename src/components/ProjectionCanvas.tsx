@@ -233,7 +233,7 @@ export const ProjectionCanvas = ({
     }, [nextProjection])
 
     return (
-        <div className="flex flex-row space-x-5">
+        <div className="flex flex-row gap-5 flex-wrap justify-center">
             <div className="flex flex-col space-y-1 items-center">
                 <div className="bg-white rounded-md border-1 border-gray-300">
                     <canvas ref={canvasRef} className="rounded-lg" />
