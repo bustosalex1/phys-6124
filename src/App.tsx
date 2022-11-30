@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { projectionOptions } from './components/ProjectionOptions'
 import DropdownMenu from './components/DropdownMenu'
 import { ProjectionCanvas } from './components/ProjectionCanvas'
-import { MathJax } from 'better-react-mathjax'
+import { MathJax, MathJaxContext } from 'better-react-mathjax'
 
 const App = () => {
     // state variable to manage whether or not the world atlas is visible
@@ -34,7 +34,7 @@ const App = () => {
             {/* Outermost container for Projection Parameters div and Projection Canvas div */}
             <div className="flex justify-center flex-row gap-10 flex-wrap">
                 {/* Projection Parameters div */}
-                <div className="p-5 rounded-md border-1 border-black drop-shadow-xl flex justify-start flex-col space-y-1 bg-white">
+                <div className="p-5 rounded-md border-1 border-black drop-shadow-xl flex justify-start flex-col space-y-1 bg-white w-full max-w-sm">
                     {/* Projection Parameters title text */}
                     <div className="text-center text-lg font-semibold">Projection Settings</div>
                     {/* Dropdown menu for projection options */}
@@ -45,12 +45,15 @@ const App = () => {
                         setSelectedValue={setNextProjection}
                     />
                     {/* Display Component for Projection Equations */}
-                    {currentProjection.formula && (
-                        <div className="self-center border-1 p-2 border-gray-300 rounded-md flex flex-col space-y-1 w-full items-center">
-                            <MathJax>{currentProjection.formula}</MathJax>
-                            <span className="label-text p-1">Base Projection</span>
-                        </div>
-                    )}
+
+                    <MathJaxContext>
+                        {currentProjection.formula && (
+                            <div className="self-center border-1 p-2 border-gray-300 rounded-md flex flex-col space-y-1 w-full items-center">
+                                <MathJax>{currentProjection.formula}</MathJax>
+                                <span className="label-text p-1">Base Projection</span>
+                            </div>
+                        )}
+                    </MathJaxContext>
                     {/* Toggle for enabling/disabling world atlas shapes */}
                     <div className="form-control">
                         <label className="label cursor-pointer">
