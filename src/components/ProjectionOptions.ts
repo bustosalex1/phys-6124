@@ -37,7 +37,8 @@ export const projectionOptions = [
         name: 'Mercator',
         projection: d3.geoMercatorRaw,
         renderSphere: true,
-        formula: String.raw`\( f(z) = Rz \)`,
+        // formula: String.raw`\( f(z) = Rz \)`,
+        formula: "\\( bruh \\)"
     },
     {
         name: 'Stereographic',

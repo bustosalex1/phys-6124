@@ -46,14 +46,14 @@ const App = () => {
                     />
                     {/* Display Component for Projection Equations */}
 
-                    <MathJaxContext>
-                        {currentProjection.formula && (
-                            <div className="self-center border-1 p-2 border-gray-300 rounded-md flex flex-col space-y-1 w-full items-center">
+                    {currentProjection.formula && (
+                        <div className="self-center border-1 p-2 border-gray-300 rounded-md flex flex-col space-y-1 w-full items-center">
+                            <MathJaxContext>
                                 <MathJax>{currentProjection.formula}</MathJax>
-                                <span className="label-text p-1">Base Projection</span>
-                            </div>
-                        )}
-                    </MathJaxContext>
+                            </MathJaxContext>
+                            <span className="label-text p-1">Base Projection</span>
+                        </div>
+                    )}
                     {/* Toggle for enabling/disabling world atlas shapes */}
                     <div className="form-control">
                         <label className="label cursor-pointer">
