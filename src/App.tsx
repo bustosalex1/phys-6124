@@ -48,7 +48,7 @@ const App = () => {
 
                     {currentProjection.formula && (
                         <div className="self-center border-1 p-2 border-gray-300 rounded-md flex flex-col space-y-1 w-full items-center">
-                            <MathJax>{currentProjection.formula}</MathJax>
+                            <MathJax hideUntilTypeset="every">{currentProjection.formula}</MathJax>
                             <span className="label-text p-1">Base Projection</span>
                         </div>
                     )}
