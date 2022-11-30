@@ -46,17 +46,15 @@ const App = () => {
                     />
                     {/* Display Component for Projection Equations */}
 
-                    <div
-                        className="self-center border-1 p-2 border-gray-300 rounded-md flex flex-col space-y-1 w-full items-center"
-                        style={{ visibility: currentProjection.formula ? 'visible' : 'hidden' }}
-                    >
-                        <MathJax dynamic>
-                            <span>
-                                {currentProjection.formula ? currentProjection.formula : ' '}
-                            </span>
-                        </MathJax>
-                        <span className="label-text p-1">Base Projection</span>
-                    </div>
+                    {currentProjection.formula && (
+                        <div
+                            className="self-center border-1 p-2 border-gray-300 rounded-md flex flex-col space-y-1 w-full items-center"
+                            style={{ visibility: currentProjection.formula ? 'visible' : 'hidden' }}
+                        >
+                            <MathJax dynamic>{currentProjection.formula}</MathJax>
+                            <span className="label-text p-1">Base Projection</span>
+                        </div>
+                    )}
                     {/* Toggle for enabling/disabling world atlas shapes */}
                     <div className="form-control">
                         <label className="label cursor-pointer">
