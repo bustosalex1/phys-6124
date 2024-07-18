@@ -19,22 +19,37 @@ const App = () => {
     const [scale, setScale] = useState<number>(100)
 
     // state variable to manage the speed of the animations (proportional to the number of frames in an animation)
-    const [animationDuration, setAnimationDuration] = useState<number>(200)
+    const [animationDuration, setAnimationDuration] = useState<number>(50)
 
     return (
-        <>
+        <div className="flex flex-col space-y-2 lg:h-screen p-8  bg-base-100">
             {/* Title Text */}
-            <div className="p-10 text-center">
-                <div className="text-4xl font-semibold">
-                    PHYS 6124 Final Project: Conformal Map Explorer
-                </div>
-                <div className="text-md">by Sabastian Abelezele and Alex Bustos</div>
+            <div className="text-3xl font-semibold text-center">
+                PHYS 6124 Final Project: Conformal Map Explorer
             </div>
 
             {/* Outermost container for Projection Parameters div and Projection Canvas div */}
-            <div className="flex justify-center flex-row gap-10 flex-wrap">
+            <div className="flex flex-col gap-2 lg:flex-row lg:overflow-hidden">
+
+                {/* div for Projection Canvas */}
+                <div className="p-5 bg-white rounded-md border-1 border-black drop-shadow-xl overflow-scroll">
+                    <ProjectionCanvas
+                        currentProjection={currentProjection}
+                        setCurrentProjection={setCurrentProjection}
+                        nextProjection={nextProjection}
+                        setNextProjection={setNextProjection}
+                        useAtlas={atlasEnabled}
+                        width={450} // bad practice, I'm sure
+                        height={450} // likewise
+                        scale={scale}
+                        label={currentProjection.name}
+                        resolution={2}
+                        animationDuration={animationDuration}
+                    />
+                </div>
+
                 {/* Projection Parameters div */}
-                <div className="p-5 rounded-md border-1 border-black drop-shadow-xl flex justify-start flex-col space-y-1 bg-white w-full max-w-sm">
+                <div className="p-5 rounded-md border-1 border-black drop-shadow-xl flex justify-start flex-col space-y-1 bg-white w-full lg:max-w-sm">
                     {/* Projection Parameters title text */}
                     <div className="text-center text-lg font-semibold">Projection Settings</div>
                     {/* Dropdown menu for projection options */}
@@ -102,25 +117,8 @@ const App = () => {
                         </label>
                     </div>
                 </div>
-
-                {/* div for Projection Canvas */}
-                <div className="p-5 bg-white rounded-md border-1 border-black drop-shadow-xl">
-                    <ProjectionCanvas
-                        currentProjection={currentProjection}
-                        setCurrentProjection={setCurrentProjection}
-                        nextProjection={nextProjection}
-                        setNextProjection={setNextProjection}
-                        useAtlas={atlasEnabled}
-                        width={450} // bad practice, I'm sure
-                        height={450} // likewise
-                        scale={scale}
-                        label={currentProjection.name}
-                        resolution={2}
-                        animationDuration={animationDuration}
-                    />
-                </div>
             </div>
-        </>
+        </div>
     )
 }
 

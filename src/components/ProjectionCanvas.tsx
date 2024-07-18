@@ -27,9 +27,6 @@ type ProjectionProps = {
     animationDuration: number
 }
 
-// all of this is bad
-// make a slider for animationDuration please!
-
 // can we move this elsewhere?
 const graticules = geoGraticule()
 const land = feature(land110m as any, land110m.objects.land as any)
@@ -69,7 +66,7 @@ export const ProjectionCanvas = ({
 
             // only update the projection if we're animating, basically
             if ((projection as any).alpha) {
-                ;(projection as any).alpha(t) // this is pretty gross but oh well
+                (projection as any).alpha(t) // this is pretty gross but oh well
             }
 
             // instantiate a path generator based on the current projection
