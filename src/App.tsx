@@ -29,10 +29,10 @@ const App = () => {
             </div>
 
             {/* Outermost container for Projection Parameters div and Projection Canvas div */}
-            <div className="flex flex-col gap-2 lg:flex-row lg:overflow-hidden">
+            <div className="flex flex-col gap-2 lg:flex-row lg:overflow-hidden justify-center">
 
                 {/* div for Projection Canvas */}
-                <div className="p-5 bg-white rounded-md border-1 border-black drop-shadow-xl overflow-scroll">
+                <div className="p-5 bg-white rounded-md border-1 border-black drop-shadow-xl overflow-y-auto">
                     <ProjectionCanvas
                         currentProjection={currentProjection}
                         setCurrentProjection={setCurrentProjection}
