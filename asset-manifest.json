@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/phys-6124/static/css/main.4f32d9cc.css",
-    "main.js": "/phys-6124/static/js/main.c60efee4.js",
+    "main.css": "/phys-6124/static/css/main.7dd8f785.css",
+    "main.js": "/phys-6124/static/js/main.5f1295b0.js",
     "index.html": "/phys-6124/index.html",
-    "main.4f32d9cc.css.map": "/phys-6124/static/css/main.4f32d9cc.css.map",
-    "main.c60efee4.js.map": "/phys-6124/static/js/main.c60efee4.js.map"
+    "main.7dd8f785.css.map": "/phys-6124/static/css/main.7dd8f785.css.map",
+    "main.5f1295b0.js.map": "/phys-6124/static/js/main.5f1295b0.js.map"
   },
   "entrypoints": [
-    "static/css/main.4f32d9cc.css",
-    "static/js/main.c60efee4.js"
+    "static/css/main.7dd8f785.css",
+    "static/js/main.5f1295b0.js"
   ]
 }
